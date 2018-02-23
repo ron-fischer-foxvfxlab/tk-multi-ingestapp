@@ -18,6 +18,18 @@ import threading
 from sgtk.platform.qt import QtCore, QtGui
 from .ui.dialog import Ui_Dialog
 
+import traceback
+logger = sgtk.platform.get_logger(__name__)
+
+def logerrors_decorate(func):
+    def func_wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception:
+            logger.error("Error calling %s(%s, %s):\n%s" % (
+                func.__name__, args, kwargs, traceback.format_exc()))
+    return func_wrapper
+
 # Import the shotgun_model module from the shotgun utils framework.
 shotgun_model = sgtk.platform.import_framework("tk-framework-shotgunutils",
                                                "shotgun_model")
@@ -36,12 +48,14 @@ def show_dialog(app_instance):
 
     # we pass the dialog class to this method and leave the actual construction
     # to be carried out by toolkit.
-    app_instance.engine.show_dialog("Starter Template App...", app_instance, AppDialog)
+    app_instance.engine.show_dialog("Ingest Turnover...", app_instance, AppDialog)
 
 class AppDialog(QtGui.QWidget):
     """
     Main application dialog window
     """
+
+    signalDirectorySelected = QtCore.Signal(str)
     
     def __init__(self):
         """
@@ -49,20 +63,33 @@ class AppDialog(QtGui.QWidget):
         """
         # first, call the base class and let it do its thing.
         QtGui.QWidget.__init__(self)
-        
+
         # now load in the UI that was created in the UI designer
         self.ui = Ui_Dialog() 
         self.ui.setupUi(self)
-        
+
+        # Qt Designer is funky about connections so do them here
+        self.ui.dirButton.clicked.connect(self.slotDirectoryBrowser)
+        self.signalDirectorySelected.connect(self.ui.lineEdit.setText)
+        self.ui.lineEdit.returnPressed.connect(self.ui.actionScanTurnoverFiles.trigger)
+        self.ui.scanButton.clicked.connect(self.ui.actionScanTurnoverFiles.trigger)
+        self.ui.actionScanTurnoverFiles.triggered.connect(self.slotScanForTurnoverFiles)
+        QtCore.QMetaObject.connectSlotsByName(self)
+
+    @logerrors_decorate
+    def slotScanForTurnoverFiles(self, *args):
         # most of the useful accessors are available through the Application class instance
         # it is often handy to keep a reference to this. You can get it via the following method:
         self._app = sgtk.platform.current_bundle()
-        
+
+        model = QtGui.QFileSystemModel()
+        model.setRootPath("")
+
         # via the self._app handle we can for example access:
         # - The engine, via self._app.engine
         # - A Shotgun API instance, via self._app.shotgun
-        # - A tk API instance, via self._app.tk 
-        
+        # - A tk API instance, via self._app.tk
+
         # setup our data backend
         self._model = shotgun_model.SimpleShotgunModel(self)
 
@@ -77,3 +104,12 @@ class AppDialog(QtGui.QWidget):
 
         # hook up delegate renderer with view
         self.ui.view.setItemDelegate(self._delegate)
+
+    @logerrors_decorate
+    def slotDirectoryBrowser(self, *args):
+        dirname = QtGui.QFileDialog.getExistingDirectory(
+            parent=self,
+            caption="Locate turnover directory",
+            dir="P:\\COTW\\Turnovers",
+            options=QtGui.QFileDialog.Option.ShowDirsOnly)
+        self.signalDirectorySelected.emit(dirname)
