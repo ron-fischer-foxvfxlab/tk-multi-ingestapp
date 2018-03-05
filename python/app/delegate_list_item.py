@@ -15,7 +15,7 @@ from sgtk.platform.qt import QtCore, QtGui
 shotgun_model = sgtk.platform.import_framework("tk-framework-shotgunutils",
                                                "shotgun_model")
 shotgun_view = sgtk.platform.import_framework("tk-framework-qtwidgets",
-                                              "shotgun_view")
+                                              "views")
 
 from .widget_list_item import ListItemWidget
 
@@ -74,7 +74,7 @@ class ListItemDelegate(shotgun_view.WidgetDelegate):
         icon = shotgun_model.get_sanitized_data(model_index, QtCore.Qt.DecorationRole)
         # create a thumbnail from the Shotgun icon
         if icon:
-            thumb = icon.pixmap(512)
+            thumb = icon.pixmap(128)
             widget.set_thumbnail(thumb)
 
         # get the shotgun data

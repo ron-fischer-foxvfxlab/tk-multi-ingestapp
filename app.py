@@ -37,4 +37,6 @@ class FvlIngestApp(Application):
         menu_callback = lambda : app_payload.dialog.show_dialog(self)
 
         # now register the command with the engine
-        self.engine.register_command("Ingest Turnover...", menu_callback)
+        self.engine.register_command(
+            "ingest_shootday_cmd", menu_callback, {"title": "Ingest Shoot Day..."}
+        )

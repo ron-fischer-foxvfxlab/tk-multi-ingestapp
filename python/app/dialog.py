@@ -48,7 +48,8 @@ def show_dialog(app_instance):
 
     # we pass the dialog class to this method and leave the actual construction
     # to be carried out by toolkit.
-    app_instance.engine.show_dialog("Ingest Turnover...", app_instance, AppDialog)
+    dialog = app_instance.engine.show_dialog("Ingest Shoot Day files...", app_instance, AppDialog)
+    dialog.default_load()
 
 class AppDialog(QtGui.QWidget):
     """
@@ -78,26 +79,21 @@ class AppDialog(QtGui.QWidget):
 
     @logerrors_decorate
     def slotScanForTurnoverFiles(self, *args):
-        # most of the useful accessors are available through the Application class instance
-        # it is often handy to keep a reference to this. You can get it via the following method:
-        self._app = sgtk.platform.current_bundle()
-
-        model = QtGui.QFileSystemModel()
-        model.setRootPath("")
-
         # via the self._app handle we can for example access:
         # - The engine, via self._app.engine
         # - A Shotgun API instance, via self._app.shotgun
         # - A tk API instance, via self._app.tk
+        #self._app = sgtk.platform.current_bundle()
 
-        # setup our data backend
-        self._model = shotgun_model.SimpleShotgunModel(self)
+        #self._model = shotgun_model.SimpleShotgunModel(self)
+        #self.ui.view.setModel(self._model)
+        #self._model.load_data(entity_type="Asset")
 
-        # tell the view to pull data from the model
-        self.ui.view.setModel(self._model)
-
-        # load all assets from Shotgun
-        self._model.load_data(entity_type="Asset")
+        # ingest directory model
+        path = self.ui.lineEdit.text()
+        print "scanning", path
+        self._model = QtGui.QFileSystemModel()
+        self._model.setRootPath(path)
 
         # setup a delegate
         self._delegate = ListItemDelegate(self.ui.view)
@@ -105,11 +101,27 @@ class AppDialog(QtGui.QWidget):
         # hook up delegate renderer with view
         self.ui.view.setItemDelegate(self._delegate)
 
+        self.ui.view.setModel(self._model)
+
     @logerrors_decorate
     def slotDirectoryBrowser(self, *args):
         dirname = QtGui.QFileDialog.getExistingDirectory(
             parent=self,
-            caption="Locate turnover directory",
-            dir="P:\\COTW\\Turnovers",
+            caption="Locate shoot day directory",
+            dir=self.get_ingest_dir(),
             options=QtGui.QFileDialog.Option.ShowDirsOnly)
         self.signalDirectorySelected.emit(dirname)
+
+    def get_ingest_dir(self):
+        self._app = sgtk.platform.current_bundle()
+
+        template = self._app.get_template("take_vidref_area_ingest")
+        ctx = self._app.context.as_template_fields(template, validate=True)
+        path = template.apply_fields(ctx)
+
+        return path
+
+    def default_load(self):
+        path = self.get_ingest_dir()
+        self.ui.lineEdit.setText(path)
+        self.slotScanForTurnoverFiles()

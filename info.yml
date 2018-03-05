@@ -12,6 +12,10 @@
 
 # expected fields in the configuration file for this engine
 configuration:
+  take_vidref_area_ingest:
+      type: template
+      default_value: 'take_vidref_ingest'
+      description: "Location of shoot day folders in project"
 
 # this app works in all engines - it does not contain 
 # any host application specific commands
@@ -21,15 +25,15 @@ supported_engines:
 requires_shotgun_fields:
         
 # More verbose description of this item 
-display_name: "Ingest Turnover - ingest turnover files"
-description: "Ingest video and Maya file pairs from turnover."
+display_name: "Ingest Shoot Day Media - ingest video files for the shoot day"
+description: "Ingest video files from a provided shoot day."
 
 # Required minimum versions for this item to run
 requires_shotgun_version:
-requires_core_version: "v0.14.28"
+requires_core_version:
 requires_engine_version:
 
 # the frameworks required to run this app
 frameworks:
-    - {"name": "tk-framework-shotgunutils", "version": "v2.x.x"}
-    - {"name": "tk-framework-qtwidgets", "version": "v1.x.x"}
+    - {"name": "tk-framework-shotgunutils", "version": "v5.x.x"}
+    - {"name": "tk-framework-qtwidgets", "version": "v2.x.x"}
