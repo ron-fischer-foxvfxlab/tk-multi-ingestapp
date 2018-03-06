@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>608</width>
-    <height>517</height>
+    <width>810</width>
+    <height>473</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -21,48 +21,96 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <widget class="QWidget" name="scanDir" native="true">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
+    <widget class="QWidget" name="widget" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Shootday files folder</string>
-        </property>
+       <widget class="QWidget" name="dateWidget" native="true">
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QWidget" name="ingestDate" native="true">
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QLabel" name="dateLabel">
+              <property name="text">
+               <string>ShootDay</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="dateLineEdit"/>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QListView" name="takeView"/>
+         </item>
+        </layout>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit"/>
-      </item>
-      <item>
-       <widget class="QPushButton" name="dirButton">
-        <property name="text">
-         <string>...</string>
-        </property>
+       <widget class="QWidget" name="filesWidget" native="true">
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QWidget" name="scanDir" native="true">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1,0">
+            <item>
+             <widget class="QLabel" name="dirLabel">
+              <property name="text">
+               <string>Folder</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="dirLineEdit"/>
+            </item>
+            <item>
+             <widget class="QPushButton" name="dirButton">
+              <property name="text">
+               <string>...</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QListView" name="fileView"/>
+         </item>
+        </layout>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="scanButton">
+    <widget class="QPushButton" name="ingestButton">
      <property name="text">
-      <string>Scan</string>
+      <string>Ingest...</string>
      </property>
     </widget>
    </item>
-   <item>
-    <widget class="QListView" name="view"/>
-   </item>
   </layout>
-  <action name="actionScanTurnoverFiles">
+  <action name="actionScanFiles">
    <property name="text">
-    <string>ScanTurnoverFiles</string>
+    <string>ScanFiles</string>
+   </property>
+   <property name="toolTip">
+    <string>Scan Files</string>
+   </property>
+  </action>
+  <action name="actionIngestFiles">
+   <property name="text">
+    <string>IngestFiles</string>
+   </property>
+   <property name="toolTip">
+    <string>Ingest Files</string>
    </property>
   </action>
  </widget>

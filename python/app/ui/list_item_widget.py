@@ -2,7 +2,8 @@
 
 # Form implementation generated from reading ui file 'list_item_widget.ui'
 #
-#      by: pyside-uic 0.2.15 running on PySide 1.2.4
+# Created: Tue Mar 06 15:18:50 2018
+#      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
 

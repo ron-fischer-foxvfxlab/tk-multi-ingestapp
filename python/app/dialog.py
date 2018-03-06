@@ -71,37 +71,40 @@ class AppDialog(QtGui.QWidget):
 
         # Qt Designer is funky about connections so do them here
         self.ui.dirButton.clicked.connect(self.slotDirectoryBrowser)
-        self.signalDirectorySelected.connect(self.ui.lineEdit.setText)
-        self.ui.lineEdit.returnPressed.connect(self.ui.actionScanTurnoverFiles.trigger)
-        self.ui.scanButton.clicked.connect(self.ui.actionScanTurnoverFiles.trigger)
-        self.ui.actionScanTurnoverFiles.triggered.connect(self.slotScanForTurnoverFiles)
+        self.signalDirectorySelected.connect(self.ui.dirLineEdit.setText)
+        self.ui.dirLineEdit.returnPressed.connect(self.ui.actionScanFiles.trigger)
+        self.ui.actionScanFiles.triggered.connect(self.slotScanFiles)
+        self.ui.ingestButton.clicked.connect(self.ui.actionIngestFiles.trigger)
+        self.ui.actionIngestFiles.triggered.connect(self.slotIngestFiles)
         QtCore.QMetaObject.connectSlotsByName(self)
 
     @logerrors_decorate
-    def slotScanForTurnoverFiles(self, *args):
+    def slotScanFiles(self, *args):
         # via the self._app handle we can for example access:
         # - The engine, via self._app.engine
         # - A Shotgun API instance, via self._app.shotgun
         # - A tk API instance, via self._app.tk
         #self._app = sgtk.platform.current_bundle()
 
-        #self._model = shotgun_model.SimpleShotgunModel(self)
-        #self.ui.view.setModel(self._model)
-        #self._model.load_data(entity_type="Asset")
+        self._shotgunModel = shotgun_model.SimpleShotgunModel(self)
+        self.ui.takeView.setModel(self._shotgunModel)
+        self._shotgunModel.load_data(entity_type="MocapTake")
+        # setup a delegate
+        #self._delegate = ListItemDelegate(self.ui.view)
+        # hook up delegate renderer with view
+        #self.ui.view.setItemDelegate(self._delegate)
+        # FILTER TO SHOOTDAY
 
         # ingest directory model
-        path = self.ui.lineEdit.text()
-        print "scanning", path
-        self._model = QtGui.QFileSystemModel()
-        self._model.setRootPath(path)
+        path = self.ui.dirLineEdit.text()
+        self._filesystemModel = QtGui.QFileSystemModel()
+        self._filesystemModel.setRootPath(path)
+        self.ui.fileView.setModel(self._filesystemModel)
+        self.ui.fileView.setRootIndex(self._filesystemModel.index(path))
 
-        # setup a delegate
-        self._delegate = ListItemDelegate(self.ui.view)
-
-        # hook up delegate renderer with view
-        self.ui.view.setItemDelegate(self._delegate)
-
-        self.ui.view.setModel(self._model)
+    @logerrors_decorate
+    def slotIngestFiles(self, *args):
+        pass
 
     @logerrors_decorate
     def slotDirectoryBrowser(self, *args):
@@ -123,5 +126,5 @@ class AppDialog(QtGui.QWidget):
 
     def default_load(self):
         path = self.get_ingest_dir()
-        self.ui.lineEdit.setText(path)
-        self.slotScanForTurnoverFiles()
+        self.ui.dirLineEdit.setText(path)
+        self.slotScanFiles()
