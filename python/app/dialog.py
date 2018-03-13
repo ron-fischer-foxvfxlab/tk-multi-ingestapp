@@ -17,6 +17,9 @@ import threading
 # the code will be compatible with both PySide and PyQt.
 from sgtk.platform.qt import QtCore, QtGui
 from .ui.dialog import Ui_Dialog
+from .lib.filesystem_model import VideoFilesModel
+from .lib.shootday_model import ShootDayModel
+from .lib.link_versions import TakeMediaProcessor
 
 import traceback
 logger = sgtk.platform.get_logger(__name__)
@@ -30,13 +33,9 @@ def logerrors_decorate(func):
                 func.__name__, args, kwargs, traceback.format_exc()))
     return func_wrapper
 
-# Import the shotgun_model module from the shotgun utils framework.
-shotgun_model = sgtk.platform.import_framework("tk-framework-shotgunutils",
-                                               "shotgun_model")
-# Set up alias
-ShotgunModel = shotgun_model.ShotgunModel
-
-from .delegate_list_item import ListItemDelegate
+class IntervalDelegate(QtGui.QStyledItemDelegate):
+    def displayText(self, value, locale):
+        return unicode(value)
 
 def show_dialog(app_instance):
     """
@@ -74,37 +73,36 @@ class AppDialog(QtGui.QWidget):
         self.signalDirectorySelected.connect(self.ui.dirLineEdit.setText)
         self.ui.dirLineEdit.returnPressed.connect(self.ui.actionScanFiles.trigger)
         self.ui.actionScanFiles.triggered.connect(self.slotScanFiles)
-        self.ui.ingestButton.clicked.connect(self.ui.actionIngestFiles.trigger)
-        self.ui.actionIngestFiles.triggered.connect(self.slotIngestFiles)
+
+        self.ui.newVersionsButton.clicked.connect(self.ui.actionNewVersions.trigger)
+        self.ui.actionNewVersions.triggered.connect(self.slotNewVersions)
+
+        self.ui.linkVersionsButton.clicked.connect(self.ui.actionLinkVersions.trigger)
+        self.ui.actionLinkVersions.triggered.connect(self.slotLinkVersions)
+
         QtCore.QMetaObject.connectSlotsByName(self)
 
     @logerrors_decorate
-    def slotScanFiles(self, *args):
-        # via the self._app handle we can for example access:
-        # - The engine, via self._app.engine
-        # - A Shotgun API instance, via self._app.shotgun
-        # - A tk API instance, via self._app.tk
-        #self._app = sgtk.platform.current_bundle()
+    def slotScanTakes(self, *args):
+        date = self.get_ingest_shootday()
 
-        self._shotgunModel = shotgun_model.SimpleShotgunModel(self)
+        self._shotgunModel = ShootDayModel(self)
         self.ui.takeView.setModel(self._shotgunModel)
-        self._shotgunModel.load_data(entity_type="MocapTake")
-        # setup a delegate
-        #self._delegate = ListItemDelegate(self.ui.view)
-        # hook up delegate renderer with view
-        #self.ui.view.setItemDelegate(self._delegate)
-        # FILTER TO SHOOTDAY
+        self._shotgunModel.load_data(date)
 
-        # ingest directory model
+        #self._delegate = IntervalDelegate(self.ui.takeView)
+        #self.ui.takeView.setItemDelegateForColumn(self._shotgunModel.INTERVAL_COLUMN, self._delegate)
+
+    @logerrors_decorate
+    def slotScanFiles(self, *args):
         path = self.ui.dirLineEdit.text()
-        self._filesystemModel = QtGui.QFileSystemModel()
+        self._filesystemModel = VideoFilesModel(self)
         self._filesystemModel.setRootPath(path)
         self.ui.fileView.setModel(self._filesystemModel)
         self.ui.fileView.setRootIndex(self._filesystemModel.index(path))
 
-    @logerrors_decorate
-    def slotIngestFiles(self, *args):
-        pass
+        self._intervalDelegate = IntervalDelegate(self.ui.fileView)
+        self.ui.fileView.setItemDelegateForColumn(self._filesystemModel.INTERVAL_COLUMN, self._intervalDelegate)
 
     @logerrors_decorate
     def slotDirectoryBrowser(self, *args):
@@ -114,6 +112,16 @@ class AppDialog(QtGui.QWidget):
             dir=self.get_ingest_dir(),
             options=QtGui.QFileDialog.Option.ShowDirsOnly)
         self.signalDirectorySelected.emit(dirname)
+
+    # via the self._app handle we can for example access:
+    # - The engine, via self._app.engine
+    # - A Shotgun API instance, via self._app.shotgun
+    # - A tk API instance, via self._app.tk
+    #self._app = sgtk.platform.current_bundle()
+
+    def get_ingest_shootday(self):
+        self._app = sgtk.platform.current_bundle()
+        return self._app.context
 
     def get_ingest_dir(self):
         self._app = sgtk.platform.current_bundle()
@@ -125,6 +133,19 @@ class AppDialog(QtGui.QWidget):
         return path
 
     def default_load(self):
+        date = self.get_ingest_shootday()
+        self.ui.dateLineEdit.setText(date.entity.get('name'))
+        self.slotScanTakes()
+
         path = self.get_ingest_dir()
         self.ui.dirLineEdit.setText(path)
         self.slotScanFiles()
+
+    @logerrors_decorate
+    def slotNewVersions(self, *args):
+        tmp = TakeMediaProcessor(self._shotgunModel, self._app)
+        tmp.getOrCreateVersions(self._filesystemModel)
+
+    @logerrors_decorate
+    def slotLinkVersions(self, *args):
+        print "Link Versions"

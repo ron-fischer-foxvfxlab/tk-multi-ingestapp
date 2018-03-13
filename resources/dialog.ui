@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>810</width>
-    <height>473</height>
+    <width>793</width>
+    <height>471</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,81 +19,97 @@
   <property name="windowTitle">
    <string>Ingest Shootday Files...</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,0">
    <item>
-    <widget class="QWidget" name="widget" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
-      <item>
-       <widget class="QWidget" name="dateWidget" native="true">
-        <layout class="QVBoxLayout" name="verticalLayout_3">
-         <item>
-          <widget class="QWidget" name="ingestDate" native="true">
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <item>
-             <widget class="QLabel" name="dateLabel">
-              <property name="text">
-               <string>ShootDay</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="dateLineEdit"/>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QListView" name="takeView"/>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item>
-       <widget class="QWidget" name="filesWidget" native="true">
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
-          <widget class="QWidget" name="scanDir" native="true">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1,0">
-            <item>
-             <widget class="QLabel" name="dirLabel">
-              <property name="text">
-               <string>Folder</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="dirLineEdit"/>
-            </item>
-            <item>
-             <widget class="QPushButton" name="dirButton">
-              <property name="text">
-               <string>...</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QListView" name="fileView"/>
-         </item>
-        </layout>
-       </widget>
-      </item>
-     </layout>
+    <widget class="QSplitter" name="columnsSplitter">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <widget class="QWidget" name="dateWidget" native="true">
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QWidget" name="ingestDate" native="true">
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QLabel" name="dateLabel">
+            <property name="text">
+             <string>ShootDay</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="dateLineEdit"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTableView" name="takeView"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="filesWidget" native="true">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QWidget" name="scanDir" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,1,0">
+          <item>
+           <widget class="QLabel" name="dirLabel">
+            <property name="text">
+             <string>Folder</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="dirLineEdit"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="dirButton">
+            <property name="text">
+             <string>...</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTableView" name="fileView"/>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="ingestButton">
-     <property name="text">
-      <string>Ingest...</string>
+    <widget class="QWidget" name="buttonTrayWidget" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QPushButton" name="newVersionsButton">
+        <property name="text">
+         <string>Make Versions for new camera files</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="linkVersionsButton">
+        <property name="text">
+         <string>Link new Versions to Takes</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>
@@ -105,12 +121,20 @@
     <string>Scan Files</string>
    </property>
   </action>
-  <action name="actionIngestFiles">
+  <action name="actionNewVersions">
    <property name="text">
-    <string>IngestFiles</string>
+    <string>NewVersions</string>
    </property>
    <property name="toolTip">
-    <string>Ingest Files</string>
+    <string>Make Versions for new files</string>
+   </property>
+  </action>
+  <action name="actionLinkVersions">
+   <property name="text">
+    <string>LinkVersions</string>
+   </property>
+   <property name="toolTip">
+    <string>Link New Versions to Takes</string>
    </property>
   </action>
  </widget>
