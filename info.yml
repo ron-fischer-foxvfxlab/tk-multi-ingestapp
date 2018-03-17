@@ -12,12 +12,32 @@
 
 # expected fields in the configuration file for this engine
 configuration:
-  take_vidref_area_ingest:
-      type: template
-      default_value: 'take_vidref_ingest'
-      description: "Location of shoot day folders in project"
 
-# this app works in all engines - it does not contain 
+  take_vidref_ingest_folder:
+      type: template
+      default_value: 'qtake_shootday_ingest_folder'
+      description: "Folder of incoming vidref"
+
+  take_vidref_version_path:
+      type: template
+      default_value: 'qtake_version_path'
+      description: "Complete folder, filename and extension for vidref version"
+      fields: Slate, MocapTakeNumber, MocapTake, Camera, file_type
+      allows_empty: True
+
+  take_vidref_version_name:
+      type: template
+      default_value: 'qtake_version_name'
+      description: "Name of versions to be made from qtake vidref"
+      fields: MocapTake, Camera
+      allows_empty: True
+
+  file_ingest_policy:
+      type: str
+      default_value: 'copy'
+      description: "Should files be ingested by copy or symlink"
+
+# this app works in all engines - it does not contain
 # any host application specific commands
 supported_engines: 
 
@@ -26,7 +46,7 @@ requires_shotgun_fields:
         
 # More verbose description of this item 
 display_name: "Ingest Shoot Day Media - ingest video files for the shoot day"
-description: "Ingest video files from a provided shoot day."
+description: "Ingest video files from a shoot day context."
 
 # Required minimum versions for this item to run
 requires_shotgun_version:

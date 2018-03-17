@@ -96,16 +96,9 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
-       <widget class="QPushButton" name="newVersionsButton">
+       <widget class="QPushButton" name="ingestButton">
         <property name="text">
-         <string>Make Versions for new camera files</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="linkVersionsButton">
-        <property name="text">
-         <string>Link new Versions to Takes</string>
+         <string>Ingest qtake files to versions on mocap takes...</string>
         </property>
        </widget>
       </item>
@@ -121,20 +114,12 @@
     <string>Scan Files</string>
    </property>
   </action>
-  <action name="actionNewVersions">
+  <action name="actionIngestFiles">
    <property name="text">
-    <string>NewVersions</string>
+    <string>Ingest Files</string>
    </property>
    <property name="toolTip">
-    <string>Make Versions for new files</string>
-   </property>
-  </action>
-  <action name="actionLinkVersions">
-   <property name="text">
-    <string>LinkVersions</string>
-   </property>
-   <property name="toolTip">
-    <string>Link New Versions to Takes</string>
+    <string>Make Versions for files linked to takes</string>
    </property>
   </action>
  </widget>

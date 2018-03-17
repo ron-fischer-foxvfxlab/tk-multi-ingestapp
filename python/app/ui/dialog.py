@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'dialog.ui'
 #
-# Created: Thu Mar 08 10:09:50 2018
+# Created: Fri Mar 16 11:39:18 2018
 #      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -83,20 +83,15 @@ class Ui_Dialog(object):
         self.horizontalLayout_3 = QtGui.QHBoxLayout(self.buttonTrayWidget)
         self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.newVersionsButton = QtGui.QPushButton(self.buttonTrayWidget)
-        self.newVersionsButton.setObjectName("newVersionsButton")
-        self.horizontalLayout_3.addWidget(self.newVersionsButton)
-        self.linkVersionsButton = QtGui.QPushButton(self.buttonTrayWidget)
-        self.linkVersionsButton.setObjectName("linkVersionsButton")
-        self.horizontalLayout_3.addWidget(self.linkVersionsButton)
+        self.ingestButton = QtGui.QPushButton(self.buttonTrayWidget)
+        self.ingestButton.setObjectName("ingestButton")
+        self.horizontalLayout_3.addWidget(self.ingestButton)
         self.verticalLayout_2.addWidget(self.buttonTrayWidget)
         self.verticalLayout_2.setStretch(0, 1)
         self.actionScanFiles = QtGui.QAction(Dialog)
         self.actionScanFiles.setObjectName("actionScanFiles")
-        self.actionNewVersions = QtGui.QAction(Dialog)
-        self.actionNewVersions.setObjectName("actionNewVersions")
-        self.actionLinkVersions = QtGui.QAction(Dialog)
-        self.actionLinkVersions.setObjectName("actionLinkVersions")
+        self.actionIngestFiles = QtGui.QAction(Dialog)
+        self.actionIngestFiles.setObjectName("actionIngestFiles")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -106,13 +101,10 @@ class Ui_Dialog(object):
         self.dateLabel.setText(QtGui.QApplication.translate("Dialog", "ShootDay", None, QtGui.QApplication.UnicodeUTF8))
         self.dirLabel.setText(QtGui.QApplication.translate("Dialog", "Folder", None, QtGui.QApplication.UnicodeUTF8))
         self.dirButton.setText(QtGui.QApplication.translate("Dialog", "...", None, QtGui.QApplication.UnicodeUTF8))
-        self.newVersionsButton.setText(QtGui.QApplication.translate("Dialog", "Make Versions for new camera files", None, QtGui.QApplication.UnicodeUTF8))
-        self.linkVersionsButton.setText(QtGui.QApplication.translate("Dialog", "Link new Versions to Takes", None, QtGui.QApplication.UnicodeUTF8))
+        self.ingestButton.setText(QtGui.QApplication.translate("Dialog", "Ingest qtake files to versions on mocap takes...", None, QtGui.QApplication.UnicodeUTF8))
         self.actionScanFiles.setText(QtGui.QApplication.translate("Dialog", "ScanFiles", None, QtGui.QApplication.UnicodeUTF8))
         self.actionScanFiles.setToolTip(QtGui.QApplication.translate("Dialog", "Scan Files", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionNewVersions.setText(QtGui.QApplication.translate("Dialog", "NewVersions", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionNewVersions.setToolTip(QtGui.QApplication.translate("Dialog", "Make Versions for new files", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionLinkVersions.setText(QtGui.QApplication.translate("Dialog", "LinkVersions", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionLinkVersions.setToolTip(QtGui.QApplication.translate("Dialog", "Link New Versions to Takes", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionIngestFiles.setText(QtGui.QApplication.translate("Dialog", "Ingest Files", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionIngestFiles.setToolTip(QtGui.QApplication.translate("Dialog", "Make Versions for files linked to takes", None, QtGui.QApplication.UnicodeUTF8))
 
 from . import resources_rc

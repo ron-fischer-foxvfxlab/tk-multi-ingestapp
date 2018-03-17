@@ -34,9 +34,9 @@ class FvlIngestApp(Application):
 
         # first, set up our callback, calling out to a method inside the app module contained
         # in the python folder of the app
-        menu_callback = lambda : app_payload.dialog.show_dialog(self)
+        qtake_ingest_menu_callback = lambda : app_payload.dialog.show_dialog(self)
 
         # now register the command with the engine
         self.engine.register_command(
-            "ingest_shootday_cmd", menu_callback, {"title": "Ingest Shoot Day..."}
+            "ingest_qtake_cmd", qtake_ingest_menu_callback, {"title": "Ingest QTake Shoot Day..."}
         )

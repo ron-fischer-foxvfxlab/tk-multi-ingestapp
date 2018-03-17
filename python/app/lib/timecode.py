@@ -384,6 +384,10 @@ class Interval(object):
             raise TypeError(item)
         return item.Start >= self.Start and item.EndTC <= self.EndTC
 
+    def __cmp__(self, other):
+        """"Sort ordering of intervals, based on start time."""
+        return self.Start.__cmp__(other.Start)
+
     def merge(self, item):
         """Returns a single, new interval encompassing both."""
         return Interval(min((self.Start, item.Start)), endtc=max((self.EndTC, item.EndTC)))
@@ -393,10 +397,27 @@ class Interval(object):
     #    assert isinstance(item, Interval)
     #    return ()
 
-    #def intersect(self, item):
-    #    """Intersect two intervals.  Returns a tuples of zero or one intervals."""
-    #    assert isinstance(item, Interval)
-    #    return ()
+    def intersect(self, other):
+        """Intersect two intervals. Returns None (if no overlap) or one Interval."""
+        if not isinstance(other, Interval):
+            raise TypeError(other)
+
+        if other.Start.Base != self.Start.Base:
+            raise ValueError('Mismatched time Bases %r != %r' % (other.Start.Base, self.Start.Base))
+
+        if self.Start in other:
+            if other.EndTC in self:
+                return Interval(self.Start, endtc=other.EndTC)
+            else:
+                return self
+        elif other.Start in self:
+            if self.EndTC in other:
+                return other
+            else:
+                return Interval(other.Start, self.EndTC)
+        else:
+            return None
+
 
 # ----
 
@@ -705,6 +726,8 @@ class TestTimecode(unittest.TestCase):
         print "Interval / Interval bases"
         self.assertRaises(ValueError, Interval, Time(base=TB_120), endtc=Time(base=TB_24))
         self.assertRaises(ValueError, Interval, Time(base=TB_120), endfr=Time(base=TB_24))
+        # TODO test intersect
+        # TODO test sort order
 
 if __name__ == "__main__":
     unittest.main()
