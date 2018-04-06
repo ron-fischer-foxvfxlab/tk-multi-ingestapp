@@ -28,7 +28,7 @@ class ShootDayModel(shotgun_model.SimpleShotgunModel):
     def __init__(self, *args, **kwargs):
         super(ShootDayModel, self).__init__(*args, **kwargs)
 
-    def load_data(self, date, select=True, additionalFields=[]):
+    def load_data(self, date, select=False, additionalFields=[]):
         filters = [
             ['sg_shoot_day', 'is', {'type':'ShootDay', 'id': date.entity.get('id')}],
         ]
